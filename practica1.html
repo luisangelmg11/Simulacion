@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Números Aleatorios y Promedio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="card-title text-center">Generador de Números Aleatorios</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Campos para el rango 1 -->
+                        <div class="mb-3">
+                            <h4 class="text-center">Secuencia 1</h4>
+                            <label for="rango1Min" class="form-label">Rango 1 (Mínimo):</label>
+                            <input type="number" class="form-control" id="rango1Min" placeholder="Mínimo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="rango1Max" class="form-label">Rango 1 (Máximo):</label>
+                            <input type="number" class="form-control" id="rango1Max" placeholder="Máximo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="numRandom1" class="form-label">Números Aleatorios (Cantidad)</label>
+                            <input type="number" class="form-control" id="numRandom1" placeholder="Aleatorio">
+                        </div>
+
+                        <!-- Campos para el rango 2 -->
+                        <div class="mb-3">
+                            <h4 class="text-center">Secuencia 2</h4>
+                            <label for="rango2Min" class="form-label">Rango 2 (Mínimo):</label>
+                            <input type="number" class="form-control" id="rango2Min" placeholder="Mínimo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="rango2Max" class="form-label">Rango 2 (Máximo):</label>
+                            <input type="number" class="form-control" id="rango2Max" placeholder="Máximo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="numRandom2" class="form-label">Números Aleatorios (Cantidad)</label>
+                            <input type="number" class="form-control" id="numRandom2" placeholder="Aleatorio">
+                        </div>
+
+                        <!-- Botón para generar y calcular -->
+                        <button class="btn btn-success w-100" onclick="generarYCalcular()">Generar y Calcular</button>
+
+                        <!-- Resultado -->
+                        <div class="mt-4">
+                            <h4 class="text-center">Resultado:</h4>
+                            <p id="resultadoSecuencia1" class="text-center fs-5"></p>
+                            <p id="resultadoSecuencia2" class="text-center fs-5"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y dependencias -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function generarYCalcular() {
+            // Obtener los valores de los rangos
+            const rango1Min = parseInt(document.getElementById("rango1Min").value);
+            const rango1Max = parseInt(document.getElementById("rango1Max").value);
+            const numRandom1 = parseInt(document.getElementById("numRandom1").value);
+
+            const rango2Min = parseInt(document.getElementById("rango2Min").value);
+            const rango2Max = parseInt(document.getElementById("rango2Max").value);
+            const numRandom2 = parseInt(document.getElementById("numRandom2").value);
+
+            // Generar 5 números aleatorios para cada secuencia
+            const secuencia1 = generarSecuencia(rango1Min, rango1Max, numRandom1);
+            const secuencia2 = generarSecuencia(rango2Min, rango2Max, numRandom2);
+
+            // Calcular el promedio de cada secuencia
+            const promedio1 = calcularPromedio(secuencia1);
+            const promedio2 = calcularPromedio(secuencia2);
+
+            // Mostrar los resultados
+            document.getElementById("resultadoSecuencia1").innerHTML = `
+                Promedio 1: <strong>${promedio1.toFixed(2)}</strong>
+            `;
+            document.getElementById("resultadoSecuencia2").innerHTML = `
+                Promedio 2: <strong>${promedio2.toFixed(2)}</strong>
+            `;
+        }
+
+        // Función para generar una secuencia de números aleatorios
+        function generarSecuencia(min, max, cantidad) {
+            const secuencia = [];
+            for (let i = 0; i < cantidad; i++) {
+                secuencia.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            return secuencia;
+        }
+
+        // Función para calcular el promedio de una secuencia
+        function calcularPromedio(secuencia) {
+            const suma = secuencia.reduce((total, num) => total + num, 0);
+            return suma / secuencia.length;
+        }
+    </script>
+</body>
+
+</html>
