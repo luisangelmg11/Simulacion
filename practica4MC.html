@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es_MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método del Multiplicador Constante</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #0d6efd;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Método del Multiplicador Constante</h1>
+
+        <!-- Formulario -->
+        <div class="form-container">
+            <form id="multiplicadorConstanteForm">
+                <div class="mb-3">
+                    <label for="semilla" class="form-label">Semilla (X0):</label>
+                    <input type="number" class="form-control" id="semilla" name="semilla" required>
+                </div>
+                <div class="mb-3">
+                    <label for="multiplicador" class="form-label">Multiplicador Constante:</label>
+                    <input type="number" class="form-control" id="multiplicador" name="multiplicador" required>
+                </div>
+                <div class="mb-3">
+                    <label for="iteraciones" class="form-label">Número de iteraciones:</label>
+                    <input type="number" class="form-control" id="iteraciones" name="iteraciones" required>
+                </div>
+                <button type="button" class="btn btn-primary w-100"
+                    onclick="calcularMultiplicadorConstante()">Calcular</button>
+            </form>
+        </div>
+
+        <!-- Tabla de resultados -->
+        <h2 class="text-center">Resultados</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Iteración</th>
+                        <th>X<sub>i</sub></th>
+                        <th>Multiplicador</th>
+                        <th>X<sub>i</sub> * Multiplicador</th>
+                        <th>Número Pseudoaleatorio</th>
+                    </tr>
+                </thead>
+                <tbody id="resultados">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y dependencias -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Script del método del multiplicador constante -->
+    <script>
+        function calcularMultiplicadorConstante() {
+            // Obtener la semilla, el multiplicador y el número de iteraciones
+            const semilla = document.getElementById('semilla').value;
+            const multiplicador = parseInt(document.getElementById('multiplicador').value);
+            const iteraciones = parseInt(document.getElementById('iteraciones').value);
+            const resultadosTbody = document.querySelector('#resultados');
+            resultadosTbody.innerHTML = '';
+
+            // Convertir la semilla a número
+            let Xi = parseInt(semilla);
+            const digitos = semilla.length; // Asumimos que la semilla define la cantidad de dígitos
+
+            // Iterar para generar los números pseudoaleatorios
+            for (let i = 1; i <= iteraciones; i++) {
+                // Calcular el producto de Xi y el multiplicador
+                const producto = Xi * multiplicador;
+                let productoStr = producto.toString();
+
+                // Si el número de dígitos es impar, agregar un cero a la izquierda
+                if (productoStr.length % 2 !== 0) {
+                    productoStr = '0' + productoStr;
+                }
+
+                // Seleccionar los dígitos del centro
+                const inicio = Math.floor((productoStr.length - digitos) / 2);
+                const fin = inicio + digitos;
+                const nuevoXiStr = productoStr.substring(inicio, fin);
+                const nuevoXi = parseInt(nuevoXiStr);
+
+                // Calcular el número pseudoaleatorio
+                const numeroPseudoaleatorio = parseFloat('0.' + nuevoXiStr);
+
+                // Mostrar los resultados en la tabla
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>${Xi}</td>
+                    <td>${multiplicador}</td>
+                    <td>${productoStr}</td>
+                    <td>${numeroPseudoaleatorio}</td>
+                `;
+                resultadosTbody.appendChild(row);
+
+                // Actualizar Xi para la siguiente iteración
+                Xi = nuevoXi;
+            }
+        }
+    </script>
+</body>
+
+</html>
