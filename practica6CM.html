@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es_MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congruencial Multiplicativo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #bbc3ee;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Congruencial Multiplicativo</h1>
+
+        <!-- Formulario -->
+        <div class="form-container">
+            <form id="multiplicativoForm">
+                <div class="mb-3">
+                    <label for="semilla" class="form-label">Semilla (X):</label>
+                    <input type="number" class="form-control" id="semilla" name="semilla" required>
+                </div>
+                <div class="mb-3">
+                    <label for="multiplicativa" class="form-label">Constante Multiplicativa (a):</label>
+                    <input type="number" class="form-control" id="multiplicativa" name="multiplicativa" required>
+                </div>
+                <div class="mb-3">
+                    <label for="modulo" class="form-label">Módulo (m):</label>
+                    <input type="number" class="form-control" id="modulo" name="modulo" required>
+                </div>
+                <div class="mb-3">
+                    <label for="iteraciones" class="form-label">Número de iteraciones:</label>
+                    <input type="number" class="form-control" id="iteraciones" name="iteraciones" required>
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="calcularMultiplicativo()">Calcular</button>
+            </form>
+        </div>
+
+        <!-- Mensaje de advertencia -->
+        <div id="advertencia" class="alert alert-warning d-none" role="alert">
+            La semilla y el módulo deben ser números mayores a 0.
+        </div>
+
+        <!-- Mensaje de advertencia -->
+        <div id="advertencia2" class="alert alert-warning d-none" role="alert">
+            La semilla debe ser un número impar.
+        </div>
+
+        <!-- Tabla de resultados -->
+        <h2 class="text-center">Resultados</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Iteración</th>
+                        <th>Multiplicación</th>
+                        <th>X<sub>i</sub></th>
+                        <th>División - Resultado</th>
+                    </tr>
+                </thead>
+                <tbody id="resultados">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Script del algoritmo congruencial multiplicativo -->
+    <script>
+        function calcularMultiplicativo() {
+            // Obtener los valores del formulario
+            const semilla = parseInt(document.getElementById('semilla').value);
+            const multiplicativa = parseInt(document.getElementById('multiplicativa').value);
+            const modulo = parseInt(document.getElementById('modulo').value);
+            const iteraciones = parseInt(document.getElementById('iteraciones').value);
+            const resultadosTbody = document.querySelector('#resultados');
+            const advertencia = document.getElementById('advertencia');
+            const advertencia2 = document.getElementById('advertencia2');
+
+            // Validar que la semilla y el módulo sean mayores a 0
+            if (semilla <= 0 || modulo <= 0) {
+                advertencia.classList.remove('d-none'); // Mostrar advertencia
+                advertencia2.classList.add('d-none'); // Ocultar segunda advertencia
+                resultadosTbody.innerHTML = ''; // Limpiar tabla de resultados
+                return; // Detener la ejecución
+            } else {
+                advertencia.classList.add('d-none'); // Ocultar advertencia si los valores son válidos
+            }
+
+            // Validar que la semilla sea un número impar
+            if (semilla % 2 === 0) { // % modulo
+                advertencia2.classList.remove('d-none'); // Mostrar segunda advertencia
+                resultadosTbody.innerHTML = ''; // Limpiar tabla de resultados
+                return; // Detener la ejecución
+            } else {
+                advertencia2.classList.add('d-none'); // Ocultar segunda advertencia si la semilla es válida
+            }
+
+            // Limpiar la tabla de resultados
+            resultadosTbody.innerHTML = '';
+
+            // Inicializar X con la semilla
+            let Xi = semilla;
+
+            // Iterar para generar los números pseudoaleatorios
+            for (let i = 1; i <= iteraciones; i++) {
+                // Calcular la multiplicación (a * X_i)
+                const multiplicacion = multiplicativa * Xi;
+
+                // Calcular el siguiente valor de X usando la fórmula del algoritmo congruencial multiplicativo
+                Xi = multiplicacion % modulo;
+
+                // Calcular la división (X_i / (m - 1)) para normalizar el número pseudoaleatorio entre 0 y 1
+                const division = Xi / (modulo - 1);
+
+                // Mostrar los resultados en la tabla
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td> <!-- Columna de la iteración -->
+                    <td>${multiplicacion}</td> <!-- Columna de la multiplicación (a * X_i) -->
+                    <td>${Xi}</td> <!-- Columna del valor actual de X_i -->
+                    <td>${division.toFixed(4)}</td> <!-- Columna de la división (X_i / (m - 1)) -->
+                `;
+                resultadosTbody.appendChild(row); // Agregar la fila a la tabla
+            }
+        }
+    </script>
+</body>
+
+</html>
